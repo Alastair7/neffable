@@ -13,17 +13,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.neffable.home.HomeScreen
-import com.example.neffable.home.MainViewModel
+import com.example.neffable.home.HomeViewModel
 import com.example.neffable.ui.theme.NeffableTheme
 
 class MainActivity : ComponentActivity() {
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             NeffableTheme {
-                HomeScreen(viewModel = viewModel)
+                NavGraph()
             }
         }
     }
