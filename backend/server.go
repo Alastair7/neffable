@@ -19,13 +19,24 @@ type TestResponse struct {
 func main() {
 	router := gin.Default()
 
-	router.GET("api/test/ping", Ping) 
+	router.GET("api/test/ping", Ping)
+	router.POST("api/emotions", SendEmotion) 
 
 	router.Run()
 }
 
 func Ping(context *gin.Context) {
 	response := &TestResponse{Message: "Pong!"}
+
+	context.JSON(http.StatusOK, response)
+}
+
+func SendEmotion(context *gin.Context) {
+	response := &BaseEmotionResponse{
+		StatusCode: http.StatusOK,
+		Message: "Mock Emotion Sent",
+		Emotion: "love",
+	}
 
 	context.JSON(http.StatusOK, response)
 }

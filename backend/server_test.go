@@ -22,14 +22,12 @@ func TestSendEmotion(t *testing.T) {
 			t.Fatalf("Couldn't create a request: %v\n", err)
 		}
 
-		w := httptest.NewRecorder()
-
-		testRouter.ServeHTTP(w, req)
+		response := httptest.NewRecorder()
+		testRouter.ServeHTTP(response, req)
 
 		decodedResponse := &TestResponse{}
 
-		response := httptest.NewRecorder()
-		errDecode := json.NewDecoder(w.Body).Decode(decodedResponse)
+		errDecode := json.NewDecoder(response.Body).Decode(decodedResponse)
 
 		if errDecode != nil {
 			t.Fatalf("Error decoding response body: %s", err)
@@ -42,6 +40,37 @@ func TestSendEmotion(t *testing.T) {
 		if decodedResponse.Message != "Pong!" {
 			t.Fatalf("Expected %s but instead got %s\n", "Pong!", decodedResponse.Message)
 		}
+
+	})
+
+	t.Run("Returns a mock love emotion", func(t *testing.T) {
+		testRouter.POST("/api/emotions", SendEmotion)
+
+		req,err := http.NewRequest(http.MethodPost, "/api/emotions", nil)
+
+		if err != nil {
+			t.Fatalf("Couldn't create a request: %v\n", err)
+		}
+
+		responseW := httptest.NewRecorder()
+
+		testRouter.ServeHTTP(responseW, req)
+
+		response := &BaseEmotionResponse{}
+		errDecode := json.NewDecoder(responseW.Body).Decode(response)
+
+		if errDecode != nil {
+			t.Fatalf("Error decoding the response body %s\n", errDecode)
+		}
+
+		if responseW.Code != http.StatusOK {
+			t.Fatalf("Expected result code %d but instead got %d", http.StatusOK, responseW.Code)
+		}
+
+		if response.Emotion != "love" {
+			t.Fatalf("Expected %s emotion but instead got %s", "love", response.Emotion)
+		}
+
 
 	})
 } 
