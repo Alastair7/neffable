@@ -7,6 +7,7 @@ Neffable is an app made for soulmates. Connect with your special one and send hi
 - Android Studio
 - Docker.
 - VS Code or your favorite code editor.
+- Golang >= 1.21.3 
 
 ### SETUP BACKEND SERVER
 
