@@ -52,7 +52,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
                     modifier = Modifier
                         .size(90.dp)
                         .padding(top = 24.dp)
-                        .clickable { viewModel.sendMessage("Love sent") }
+                        .clickable { viewModel.sendEmotion("love") }
                 )
                 Image(
                     painter = painterResource(id = R.drawable.happy),
@@ -60,7 +60,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
                     modifier = Modifier
                         .size(120.dp)
                         .padding(start = 36.dp)
-                        .clickable { viewModel.sendMessage("Happy sent") }
+                        .clickable { viewModel.sendEmotion("happy") }
                 )
                 Image(
                     painter = painterResource(id = R.drawable.sad),
@@ -68,7 +68,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
                     modifier = Modifier
                         .size(110.dp)
                         .padding(start = 48.dp)
-                        .clickable { viewModel.sendMessage("Sad sent") }
+                        .clickable { viewModel.sendEmotion("sad") }
                 )
             }
 
@@ -84,7 +84,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
 
         // Botón de regreso en la parte inferior izquierda
         Image(
-            painter = painterResource(id = R.drawable.back_icon),  // Asegúrate de tener un icono back_icon en tu carpeta drawable
+            painter = painterResource(id = R.drawable.back_icon),
             contentDescription = "Back Icon",
             modifier = Modifier
                 .size(50.dp)
@@ -100,4 +100,3 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
         )
     }
 }
-

@@ -58,6 +58,12 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
 
+    implementation ("io.ktor:ktor-client-core:2.0.0")
+    implementation ("io.ktor:ktor-client-cio:2.0.0")
+    implementation ("io.ktor:ktor-client-serialization:2.0.0")
+    implementation ("io.ktor:ktor-client-logging:2.0.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+
     testImplementation(libs.junit)
 
     androidTestImplementation(libs.androidx.junit)
