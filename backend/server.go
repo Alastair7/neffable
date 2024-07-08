@@ -1,8 +1,9 @@
 package main
 
 import (
-	"encoding/json"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type BaseEmotionResponse struct {
@@ -11,9 +12,31 @@ type BaseEmotionResponse struct {
 	Emotion    string `json:"emotion"`
 }
 
-func NeffableServer(w http.ResponseWriter, r *http.Request) {
-	emotionResponse := BaseEmotionResponse{StatusCode: 200, Message: "SUCCESS", Emotion: "Love"}
+type TestResponse struct {
+	Message string `json:"message"`
+}
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(emotionResponse)
+func main() {
+	router := gin.Default()
+
+	router.GET("api/test/ping", Ping)
+	router.POST("api/emotions", SendEmotion) 
+
+	router.Run()
+}
+
+func Ping(context *gin.Context) {
+	response := &TestResponse{Message: "Pong!"}
+
+	context.JSON(http.StatusOK, response)
+}
+
+func SendEmotion(context *gin.Context) {
+	response := &BaseEmotionResponse{
+		StatusCode: http.StatusOK,
+		Message: "Mock Emotion Sent",
+		Emotion: "love",
+	}
+
+	context.JSON(http.StatusOK, response)
 }

@@ -4,43 +4,73 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"reflect"
 	"testing"
+
+	"github.com/gin-gonic/gin"
 )
 
 func TestSendEmotion(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	testRouter := gin.Default()
+	
+	t.Run("Sends a Ping message and returns Pong!", func(t *testing.T) {
+		testRouter.GET("api/test/ping", Ping)
+		
+		req, err := http.NewRequest(http.MethodGet,"/api/test/ping", nil)
 
-	t.Run("Sends an emotion and returns it", func(t *testing.T) {
-		request, _:= http.NewRequest(http.MethodPost, "/emotions", nil)
+		if err != nil {
+			t.Fatalf("Couldn't create a request: %v\n", err)
+		}
+
 		response := httptest.NewRecorder()
-		
-		NeffableServer(response, request)
-		
-		emotionResponse := decodeResponse(t, response)
+		testRouter.ServeHTTP(response, req)
 
+		decodedResponse := &TestResponse{}
 
-		want := BaseEmotionResponse{StatusCode: 200, Message: "SUCCESS", Emotion: "Love"}
-		got := emotionResponse
+		errDecode := json.NewDecoder(response.Body).Decode(decodedResponse)
 
-		assertResponseBody(t, want, got)
+		if errDecode != nil {
+			t.Fatalf("Error decoding response body: %s", err)
+		}
+
+		if response.Code != http.StatusOK {
+			t.Fatalf("Expected to get status %d but instead got %d\n",http.StatusOK, response.Code)
+		}
+
+		if decodedResponse.Message != "Pong!" {
+			t.Fatalf("Expected %s but instead got %s\n", "Pong!", decodedResponse.Message)
+		}
+
 	})
-}
 
-func decodeResponse(t *testing.T, response *httptest.ResponseRecorder) BaseEmotionResponse {
-	var emotionResponse BaseEmotionResponse
-	err := json.NewDecoder(response.Body).Decode(&emotionResponse)
+	t.Run("Returns a mock love emotion", func(t *testing.T) {
+		testRouter.POST("/api/emotions", SendEmotion)
 
-	if err != nil {
-		t.Fatalf("Unable decoding %q. '%v'", response.Body, err)
-	}
+		req,err := http.NewRequest(http.MethodPost, "/api/emotions", nil)
 
-	return emotionResponse
-}
+		if err != nil {
+			t.Fatalf("Couldn't create a request: %v\n", err)
+		}
 
-func assertResponseBody(t testing.TB, want,got BaseEmotionResponse) {
-	t.Helper()
+		responseW := httptest.NewRecorder()
 
-	if !reflect.DeepEqual(want, got) {
-		t.Errorf("Expected %#v got %#v", want, got)
-	}
+		testRouter.ServeHTTP(responseW, req)
+
+		response := &BaseEmotionResponse{}
+		errDecode := json.NewDecoder(responseW.Body).Decode(response)
+
+		if errDecode != nil {
+			t.Fatalf("Error decoding the response body %s\n", errDecode)
+		}
+
+		if responseW.Code != http.StatusOK {
+			t.Fatalf("Expected result code %d but instead got %d", http.StatusOK, responseW.Code)
+		}
+
+		if response.Emotion != "love" {
+			t.Fatalf("Expected %s emotion but instead got %s", "love", response.Emotion)
+		}
+
+
+	})
 } 
