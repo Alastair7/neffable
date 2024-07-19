@@ -1,10 +1,17 @@
-package main
+package api
 
 import (
+	"backend/cmd/api-server/backend/db"
+	"context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
+
+type APIServer struct {
+	address string
+	db      *db.Postgres
+}
 
 type BaseEmotionResponse struct {
 	StatusCode int    `json:"statusCode"`
@@ -16,13 +23,11 @@ type TestResponse struct {
 	Message string `json:"message"`
 }
 
-func main() {
-	router := gin.Default()
-
-	router.GET("api/test/ping", Ping)
-	router.POST("api/emotions", SendEmotion) 
-
-	router.Run()
+func NewAPIServer(address string, db *db.Postgres) *APIServer {
+	return &APIServer{
+		address: address,
+		db: db,
+	}
 }
 
 func Ping(context *gin.Context) {
@@ -39,4 +44,19 @@ func SendEmotion(context *gin.Context) {
 	}
 
 	context.JSON(http.StatusOK, response)
+}
+
+func (s *APIServer) Run() error {
+	router := gin.Default()
+
+	err := s.db.Ping(context.Background())
+
+	if err != nil {
+		return err
+	}
+
+	router.GET("api/test/ping", Ping)
+	router.POST("api/emotions", SendEmotion) 
+
+	return router.Run()
 }
