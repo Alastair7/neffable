@@ -35,7 +35,7 @@ func ConnectDB(ctx context.Context, dbUrl string) (*Postgres, error) {
 }
 
 func (pg *Postgres) Ping(ctx context.Context) error {
-	return pg.Ping(ctx)
+	return pg.db.Ping(ctx)
 }
 
 func (pg *Postgres) Close() {
