@@ -28,11 +28,31 @@ class HomeViewModel : ViewModel() {
 
     val publicKey = "db674edc902017c71c8e0fdf6f22abd6"
     val privateKey = "474e805f3bc50f23abc768bb68da6f7bbd7f8fe2"
+    var id = " "
 
 
-    fun sendEmotion(emotion: String) {
+    fun sendHappyEmotion(emotion:String){
         CoroutineScope(Dispatchers.IO).launch {
-            fetchHero(publicKey, privateKey)
+            snackbarMessage.value = "Sending happyness..."
+            id = "1016823"
+            fetchHero(id, publicKey, privateKey)
+            snackbarMessage.value = "Success!"
+        }
+    }
+    fun sendSadEmotion(emotion:String){
+        CoroutineScope(Dispatchers.IO).launch {
+            snackbarMessage.value = "Sending sadness..."
+            id = "1017851"
+            fetchHero(id, publicKey, privateKey)
+            snackbarMessage.value = "Success!"
+        }
+    }
+    fun sendLoveEmotion(emotion: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            snackbarMessage.value = "Sending love..."
+            id = "1017100"
+            fetchHero(id, publicKey, privateKey)
+            snackbarMessage.value = "Success!"
         }
         /*viewModelScope.launch {
             try {

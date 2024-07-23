@@ -6,14 +6,16 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 import java.security.MessageDigest
 import java.math.BigInteger
 import java.util.*
 
 interface RetrofitService {
-    @GET("v1/public/characters/1016823")
+    @GET("v1/public/characters/{id}")
     suspend fun getHero(
+        @Path("id") id: String,
         @Query("apikey") apiKey: String,
         @Query("ts") timestamp: String,
         @Query("hash") hash: String
@@ -43,26 +45,28 @@ fun md5(input: String): String {
 }
 
 // Llamada a la API
-suspend fun fetchHero(apiKey: String, privateKey: String) {
+suspend fun fetchHero(id: String, apiKey: String, privateKey: String) {
     val service = RetrofitServiceFactory.makeRetrofitService()
     val timestamp = getTimeStamp()
     val hash = md5(timestamp + privateKey + apiKey)
 
     try {
-        val response = service.getHero(apiKey, timestamp, hash)
+        val response = service.getHero(id, apiKey, timestamp, hash)
         if (response.isSuccessful) {
+
             val heroResponse = response.body()
             println("SUCCESS -- LOADING DATA")
+
             if (heroResponse != null) {
-                // Extraer el nombre del personaje
                 val characterName = heroResponse.data.results[0].name
                 println("Character Name: $characterName")
             }
+
             println(heroResponse)
-            // Procesa la respuesta del héroe aquí
+
         } else {
-            // Maneja el error aquí
             println("Error: ${response.code()} - ${response.message()}")
+
             when (response.code()) {
                 401 -> println("Unauthorized: Check your API key.")
                 403 -> println("Forbidden: You don't have access to this resource.")

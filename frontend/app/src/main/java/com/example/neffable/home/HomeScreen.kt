@@ -52,7 +52,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
                     modifier = Modifier
                         .size(90.dp)
                         .padding(top = 24.dp)
-                        .clickable { viewModel.sendEmotion("love") }
+                        .clickable { viewModel.sendLoveEmotion("love") }
                 )
                 Image(
                     painter = painterResource(id = R.drawable.happy),
@@ -60,7 +60,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
                     modifier = Modifier
                         .size(120.dp)
                         .padding(start = 36.dp)
-                        .clickable { viewModel.sendEmotion("happy") }
+                        .clickable { viewModel.sendHappyEmotion("happy") }
                 )
                 Image(
                     painter = painterResource(id = R.drawable.sad),
@@ -68,7 +68,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
                     modifier = Modifier
                         .size(110.dp)
                         .padding(start = 48.dp)
-                        .clickable { viewModel.sendEmotion("sad") }
+                        .clickable { viewModel.sendSadEmotion("sad") }
                 )
             }
 
