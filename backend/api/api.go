@@ -1,8 +1,8 @@
 package api
 
 import (
-	"backend/cmd/api-server/backend/db"
 	"context"
+	"neffable/backend/db"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
