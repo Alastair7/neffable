@@ -44,6 +44,15 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
         }
     }
 
+    // Observa los cambios en isPulsing
+    LaunchedEffect(viewModel.isPulsing.value) {
+        if (viewModel.isPulsing.value) {
+            mainUserPulse = true
+            delay(300)
+            mainUserPulse = false
+        }
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -71,7 +80,6 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
                         .padding(top = 24.dp)
                         .clickable {
                             viewModel.sendLoveEmotion("love")
-                            mainUserPulse = true
                         }
                 )
                 Image(
@@ -82,7 +90,6 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
                         .padding(start = 36.dp)
                         .clickable {
                             viewModel.sendHappyEmotion("happy")
-                            mainUserPulse = true
                         }
                 )
                 Image(
@@ -93,19 +100,11 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
                         .padding(start = 48.dp)
                         .clickable {
                             viewModel.sendSadEmotion("sad")
-                            mainUserPulse = true
                         }
                 )
             }
 
             // MainUser
-            LaunchedEffect(mainUserPulse) {
-                if (mainUserPulse) {
-                    delay(300)
-                    mainUserPulse = false
-                }
-            }
-
             Image(
                 painter = painterResource(id = R.drawable.she),
                 contentDescription = "Bottom Icon",
@@ -133,4 +132,131 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
             modifier = Modifier.align(Alignment.BottomCenter)
         )
     }
+
+    // Mostrar snackbar
+    LaunchedEffect(snackbarMessage) {
+        if (snackbarMessage.isNotEmpty()) {
+            snackbarHostState.showSnackbar(snackbarMessage)
+            viewModel.snackbarMessage.value = ""
+        }
+    }
 }
+
+
+//@Composable
+//fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
+//    val snackbarMessage by remember { viewModel.snackbarMessage }
+//    val snackbarHostState = remember { SnackbarHostState() }
+//
+//    var mainUserPulse by remember { mutableStateOf(false) }
+//    val mainUserScale by animateFloatAsState(
+//        targetValue = if (mainUserPulse) 1.2f else 1f,
+//        animationSpec = tween(durationMillis = 300)
+//    )
+//
+//    var userConnectedPulse by remember { mutableStateOf(false) }
+//    val userConnectedScale by animateFloatAsState(
+//        targetValue = if (userConnectedPulse) 1.2f else 1f,
+//        animationSpec = tween(durationMillis = 300)
+//    )
+//
+//    // Observa los cambios en userConnectedResponseReceived
+//    LaunchedEffect(viewModel.userConnectedResponseReceived.value) {
+//        if (viewModel.userConnectedResponseReceived.value) {
+//            userConnectedPulse = true
+//            delay(300)
+//            userConnectedPulse = false
+//            viewModel.userConnectedResponseReceived.value = false // Resetear el estado después de la animación
+//        }
+//    }
+//
+//    Box(modifier = Modifier.fillMaxSize()) {
+//        Column(
+//            modifier = Modifier.fillMaxSize(),
+//            verticalArrangement = Arrangement.SpaceBetween,
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            // UserConnectedTo
+//            Image(
+//                painter = painterResource(id = R.drawable.he),
+//                contentDescription = "Top Icon",
+//                modifier = Modifier
+//                    .size(120.dp)
+//                    .padding(top = 24.dp)
+//                    .scale(userConnectedScale)
+//            )
+//            Row(
+//                modifier = Modifier.fillMaxWidth(),
+//                horizontalArrangement = Arrangement.Center
+//            ) {
+//                Image(
+//                    painter = painterResource(id = R.drawable.love),
+//                    contentDescription = "Center Left Icon",
+//                    modifier = Modifier
+//                        .size(90.dp)
+//                        .padding(top = 24.dp)
+//                        .clickable {
+//                            viewModel.sendLoveEmotion("love")
+//                            mainUserPulse = true
+//                        }
+//                )
+//                Image(
+//                    painter = painterResource(id = R.drawable.happy),
+//                    contentDescription = "Center Middle Icon",
+//                    modifier = Modifier
+//                        .size(120.dp)
+//                        .padding(start = 36.dp)
+//                        .clickable {
+//                            viewModel.sendHappyEmotion("happy")
+//                            mainUserPulse = true
+//                        }
+//                )
+//                Image(
+//                    painter = painterResource(id = R.drawable.sad),
+//                    contentDescription = "Center Right Icon",
+//                    modifier = Modifier
+//                        .size(110.dp)
+//                        .padding(start = 48.dp)
+//                        .clickable {
+//                            viewModel.sendSadEmotion("sad")
+//                            mainUserPulse = true
+//                        }
+//                )
+//            }
+//
+//            // MainUser
+//            LaunchedEffect(mainUserPulse) {
+//                if (mainUserPulse) {
+//                    delay(300)
+//                    mainUserPulse = false
+//                }
+//            }
+//
+//            Image(
+//                painter = painterResource(id = R.drawable.she),
+//                contentDescription = "Bottom Icon",
+//                modifier = Modifier
+//                    .padding(bottom = 24.dp)
+//                    .size(90.dp)
+//                    .scale(mainUserScale)
+//            )
+//        }
+//
+//        // Botón de regreso en la parte inferior izquierda
+//        Image(
+//            painter = painterResource(id = R.drawable.back_icon),
+//            contentDescription = "Back Icon",
+//            modifier = Modifier
+//                .size(70.dp)
+//                .padding(16.dp)
+//                .align(Alignment.BottomStart)
+//                .clickable { navController.navigate("mainPage") }
+//        )
+//
+//        // SnackbarHost
+//        SnackbarHost(
+//            hostState = snackbarHostState,
+//            modifier = Modifier.align(Alignment.BottomCenter)
+//        )
+//    }
+//}
