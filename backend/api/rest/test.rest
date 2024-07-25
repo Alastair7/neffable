@@ -1,0 +1,1 @@
+GET {{baseUrl}}/test/ping HTTP/1.1

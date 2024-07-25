@@ -15,7 +15,7 @@ func main() {
 	envPath := os.Getenv("ENV_PATH")
 
 	if envPath == "" {
-		envPath = "/neffable/.env"
+		envPath = "../.env"
 	}
 
 	err := godotenv.Load(envPath)
@@ -26,8 +26,8 @@ func main() {
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
-	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
+	dbHost := os.Getenv("DB_HOST")
 
 	connectionString := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
 		dbUser, dbPassword, dbHost, dbPort, dbName)
@@ -39,7 +39,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	server := api.NewAPIServer(":8080", dbConn)
+	serverPort := os.Getenv("SERVER_PORT")
+	serverAddress := fmt.Sprintf(":%s", serverPort)
+	server := api.NewAPIServer(serverAddress, dbConn)
 
 	if err := server.Run(); err != nil {
 		fmt.Println("Failed to start server:", err)

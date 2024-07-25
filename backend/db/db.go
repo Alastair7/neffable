@@ -21,6 +21,7 @@ func ConnectDB(ctx context.Context, dbUrl string) (*Postgres, error) {
 	var err error
 
 	pgOnce.Do(func() {
+		fmt.Println("Connecting to DB with URL:", dbUrl)
 		db, dbErr := pgxpool.New(ctx, dbUrl)
 
 		if dbErr != nil {

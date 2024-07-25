@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	api "neffable/backend/api/soulConnections"
 	"neffable/backend/db"
 	"net/http"
 
@@ -48,7 +49,7 @@ func SendEmotion(context *gin.Context) {
 
 func (s *APIServer) Run() error {
 	router := gin.Default()
-
+	
 	err := s.db.Ping(context.Background())
 
 	if err != nil {
@@ -56,7 +57,8 @@ func (s *APIServer) Run() error {
 	}
 
 	router.GET("api/test/ping", Ping)
-	router.POST("api/emotions", SendEmotion) 
+	router.POST("api/emotions", SendEmotion)
+	router.POST("api/soulConnections", api.CreateSoulConnection) 
 
-	return router.Run()
+	return router.Run(s.address)
 }

@@ -9,6 +9,8 @@ services:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_PORT=${DB_PORT}
+      - POSTGRES_HOST=${DB_HOST}
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./backend/db/scripts:/docker-entrypoint-initdb.d
@@ -29,7 +31,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      DB_HOST: ${DB_HOST}
+      DB_HOST: db
       DB_PORT: ${DB_PORT}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
