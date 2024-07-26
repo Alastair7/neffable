@@ -1,44 +1,41 @@
 package com.example.neffable.data
 
-import com.example.neffable.data.model.Item
-import com.example.neffable.data.model.RemoteResponse
 import com.example.neffable.data.neffableModel.ApiResponse
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
-import java.security.MessageDigest
-import java.math.BigInteger
-import java.util.*
 
 interface RetrofitService {
     @GET("api/test/ping")
     suspend fun ping(): Response<ApiResponse>
 }
+
 object RetrofitServiceFactory {
     fun makeRetrofitService(): RetrofitService {
         return Retrofit.Builder()
-            .baseUrl("http://localhost:8080/")
+            .baseUrl("http://localhost:5001/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(RetrofitService::class.java)
     }
 }
-suspend fun fetchPing() {
+
+suspend fun fetchPingPong(): ApiResponse? {
     val service = RetrofitServiceFactory.makeRetrofitService()
-    try {
+    return try {
+        println(service.ping().toString())
         val response = service.ping()
         if (response.isSuccessful) {
-            val pingResponse = response.body()
-            println("-- SUCCESS --")
-            println(pingResponse)
+            println(response.body())
+            response.body()
         } else {
             println("Error: ${response.code()} - ${response.message()}")
+            null
         }
     } catch (e: Exception) {
         println("Exception: ${e.message}")
+        null
     }
 }
 

@@ -4,6 +4,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.neffable.data.RetrofitServiceFactory
+import com.example.neffable.data.fetchPingPong
+import com.example.neffable.data.neffableModel.ApiResponse
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -24,39 +26,29 @@ class HomeViewModel : ViewModel() {
     val isPulsing = mutableStateOf(false)
 
     private fun fetchPing() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val service = RetrofitServiceFactory.makeRetrofitService()
-            isPulsing.value = true  // Start pulsing animation
-
-            try {
-                val response = service.ping()
-                if (response.isSuccessful) {
-                    val pingResponse = response.body()
-                    snackbarMessage.value = "Ping Response: ${pingResponse?.message}"
-                    userConnectedResponseReceived.value = true
-                } else {
-                    snackbarMessage.value = "Error: ${response.code()} - ${response.message()}"
-                }
-            } catch (e: Exception) {
-                snackbarMessage.value = "Exception: ${e.message}"
-            } finally {
-                isPulsing.value = false  // Stop pulsing animation
+        viewModelScope.launch(Dispatchers.IO) {
+            isPulsing.value = true
+            val pingResponse = fetchPingPong()
+            if (pingResponse != null) {
+                pingResponse.toString()
+                userConnectedResponseReceived.value = true
+            } else {
+                snackbarMessage.value = "Failed to fetch ping response."
             }
+            isPulsing.value = false
         }
     }
 
-    fun sendHappyEmotion(emotion: String) {
-        snackbarMessage.value = "Sending happiness..."
-        fetchPing()
-    }
-
-    fun sendSadEmotion(emotion: String) {
-        snackbarMessage.value = "Sending sadness..."
-        fetchPing()
-    }
-
     fun sendLoveEmotion(emotion: String) {
-        snackbarMessage.value = "Sending love..."
+        snackbarMessage.value = "Sending $emotion..."
+        fetchPing()
+    }
+    fun sendHappyEmotion(emotion: String) {
+        snackbarMessage.value = "Sending $emotion..."
+        fetchPing()
+    }
+    fun sendSadEmotion(emotion: String) {
+        snackbarMessage.value = "Sending $emotion..."
         fetchPing()
     }
 
