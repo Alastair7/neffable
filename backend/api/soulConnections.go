@@ -96,5 +96,5 @@ func(s *APIServer) ConnectWithSoul(ctx *gin.Context) {
 
 	s.db.UpdateSoulConnection(request.ConnectionCode, request.SecondSoul, ctx)
 
-	ctx.JSON(http.StatusOK, nil)
+	ctx.Status(http.StatusOK)
 }

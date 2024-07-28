@@ -11,6 +11,6 @@ PATCH {{baseUrl}}/soulConnections/connect HTTP/1.1
 content-type: application/json
 
 {
-    "secondSoul":"79934967-7bb2-4b0c-ada8-d9773b727ecd",
+    "secondSoul":"20258bb0-d291-4c27-bf1f-cc0a8d4ccf4b",
     "connectionCode":"172838"
 }

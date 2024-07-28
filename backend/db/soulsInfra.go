@@ -17,6 +17,15 @@ type Soul struct {
 }
 
 func (pg *Postgres) Save(soul *Soul, ctx context.Context) *Soul {
+
+	conn, connErr := pg.db.Acquire(ctx)
+
+	if connErr != nil {
+		fmt.Printf("error %s", connErr.Error())
+	}
+
+	defer conn.Release()
+
 	sql := `
 	INSERT INTO souls (display_name)
 	VALUES ($1)
@@ -35,6 +44,14 @@ func (pg *Postgres) Save(soul *Soul, ctx context.Context) *Soul {
 }
 
 func (pg *Postgres) GetSoulByID(ID uuid.UUID, ctx context.Context) (*Soul, error) {
+	conn, connErr := pg.db.Acquire(ctx)
+
+	if connErr != nil {
+		fmt.Printf("error %s", connErr.Error())
+	}
+
+	defer conn.Release()
+	
 	result := &Soul{}
 
 	sql := `

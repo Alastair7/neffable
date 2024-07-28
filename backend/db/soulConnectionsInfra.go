@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -16,6 +17,14 @@ type SoulConnection struct {
 }
 
 func (pg *Postgres) CreateSoulConnection(soulConnection *SoulConnection, ctx context.Context) *SoulConnection {
+	conn, connErr := pg.db.Acquire(ctx)
+
+	if connErr != nil {
+		fmt.Printf("error %s", connErr.Error())
+	}
+
+	defer conn.Release()
+
 	sql := `
 	INSERT INTO soul_connections (first_soul, second_soul, connection_code)
 	VALUES ($1, $2, $3)
@@ -36,14 +45,23 @@ func (pg *Postgres) CreateSoulConnection(soulConnection *SoulConnection, ctx con
 }
 
 func (pg *Postgres) UpdateSoulConnection(connectionCode string, secondSoulID uuid.UUID, ctx context.Context) {
+
+	conn, connErr := pg.db.Acquire(ctx)
+
+	if connErr != nil {
+		fmt.Printf("error %s", connErr.Error())
+	}
+
+	defer conn.Release()
+
 	sql := `
 	UPDATE soul_connections SET second_soul = $1
 	WHERE connection_code = $2
-	`
-
-	_, err := pg.db.Exec(ctx, sql, 
-		secondSoulID,
-		connectionCode)
+	`	
+	
+	_, err := conn.Exec(ctx, sql, 
+	secondSoulID,
+	connectionCode)
 
 	if err != nil {
 		panic(err)
