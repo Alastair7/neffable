@@ -30,7 +30,7 @@ func (pg *Postgres) CreateSoulConnection(soulConnection *SoulConnection, ctx con
 	VALUES ($1, $2, $3)
 	RETURNING id
 	`
-	err := pg.db.QueryRow(ctx, sql, 
+	err := conn.QueryRow(ctx, sql, 
 		soulConnection.FirstSoul, 
 		nil,
 		soulConnection.ConnectionCode).Scan(

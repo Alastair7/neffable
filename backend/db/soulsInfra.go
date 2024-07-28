@@ -31,7 +31,7 @@ func (pg *Postgres) Save(soul *Soul, ctx context.Context) *Soul {
 	VALUES ($1)
 	RETURNING id, display_name, has_connection
 	`
-	err := pg.db.QueryRow(ctx, sql, soul.DisplayName).Scan(
+	err := conn.QueryRow(ctx, sql, soul.DisplayName).Scan(
 		&soul.ID, 
 		&soul.DisplayName,
 		&soul.HasConnection)
@@ -59,7 +59,7 @@ func (pg *Postgres) GetSoulByID(ID uuid.UUID, ctx context.Context) (*Soul, error
 	WHERE id = $1
 	`
 
-	err := pg.db.QueryRow(ctx, sql, ID).Scan(
+	err := conn.QueryRow(ctx, sql, ID).Scan(
 		&result.ID,
 		&result.DisplayName,
 		&result.HasConnection,
