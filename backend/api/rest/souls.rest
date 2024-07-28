@@ -1,0 +1,14 @@
+POST {{baseUrl}}/souls HTTP/1.1
+content-type: application/json
+
+{
+    "displayName": "Alastair"
+}
+
+###
+
+GET {{baseUrl}}/souls/{{id}} HTTP/1.1
+Content-Type: application/json
+
+### Variables
+@id = 79934967-7bb2-4b0c-ada8-d9773b727ecd

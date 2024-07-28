@@ -2,9 +2,7 @@ package api
 
 import (
 	"context"
-	api "neffable/backend/api/soulConnections"
 	"neffable/backend/db"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,16 +12,6 @@ type APIServer struct {
 	db      *db.Postgres
 }
 
-type BaseEmotionResponse struct {
-	StatusCode int    `json:"statusCode"`
-	Message    string `json:"message"`
-	Emotion    string `json:"emotion"`
-}
-
-type TestResponse struct {
-	Message string `json:"message"`
-}
-
 func NewAPIServer(address string, db *db.Postgres) *APIServer {
 	return &APIServer{
 		address: address,
@@ -31,24 +19,9 @@ func NewAPIServer(address string, db *db.Postgres) *APIServer {
 	}
 }
 
-func Ping(context *gin.Context) {
-	response := &TestResponse{Message: "Pong!"}
-
-	context.JSON(http.StatusOK, response)
-}
-
-func SendEmotion(context *gin.Context) {
-	response := &BaseEmotionResponse{
-		StatusCode: http.StatusOK,
-		Message: "Mock Emotion Sent",
-		Emotion: "love",
-	}
-
-	context.JSON(http.StatusOK, response)
-}
-
 func (s *APIServer) Run() error {
 	router := gin.Default()
+	gin.SetMode(gin.ReleaseMode)
 	
 	err := s.db.Ping(context.Background())
 
@@ -56,9 +29,10 @@ func (s *APIServer) Run() error {
 		return err
 	}
 
-	router.GET("api/test/ping", Ping)
-	router.POST("api/emotions", SendEmotion)
-	router.POST("api/soulConnections", api.CreateSoulConnection) 
+	router.GET("api/test/ping", s.Ping)
+	router.POST("/api/souls", s.CreateSoul)
+	router.GET("/api/souls/:id", s.GetSoulByID)
+	router.POST("api/soulConnections", s.CreateSoulConnection) 
 
 	return router.Run(s.address)
 }

@@ -23,16 +23,19 @@ func main() {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
 
+	/*
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
 	dbPort := os.Getenv("DB_PORT")
 	dbHost := os.Getenv("DB_HOST")
+	*/
 
-	connectionString := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
-		dbUser, dbPassword, dbHost, dbPort, dbName)
+	dbConnectionString := os.Getenv("DB_CONNECTION_STRING")
 
-	dbConn, err := db.ConnectDB(context.Background(), connectionString)
+	 fmt.Print(dbConnectionString)
+
+	dbConn, err := db.ConnectDB(context.Background(), dbConnectionString)
 
 	if err != nil {
 		fmt.Println("Error connecting to DB")
