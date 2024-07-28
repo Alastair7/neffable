@@ -57,7 +57,7 @@ func GenerateConnectionCode() string {
 	return string(byteArray)
 }
 func(s *APIServer) CreateSoulConnection(ctx *gin.Context) {
-	// GET REQUEST SOUL CONNECTION.
+
 	var requestData RequestSoulConnection
 
 	if err := ctx.ShouldBindJSON(&requestData); err != nil {
@@ -70,16 +70,31 @@ func(s *APIServer) CreateSoulConnection(ctx *gin.Context) {
 		return
 	}
 
-	// CREATE SOUL CONNECTION TO DB.
 	soulConnection := MapToSoulConnectionFrom(&requestData)
 	createdSoulConnection := s.db.CreateSoulConnection(soulConnection, ctx)
 
-	// MAP OBJECT TO RESPONSE MODEL
-
 	response := MapToSoulConnectionResponseFrom(createdSoulConnection)
 
-	// RETURN 201 OR 400
 	ctx.JSON(http.StatusCreated, response)
 }
 
-func ConnectWithSoul() {}
+func(s *APIServer) ConnectWithSoul(ctx *gin.Context) {
+	var request struct {
+		SecondSoul uuid.UUID `json:"secondSoul" binding:"required"`
+		ConnectionCode string `json:"connectionCode" binding:"required"`
+	}
+
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		errorResponse := &BaseErrorResponse{
+			Message: "An error occurred binding the request. Some data may be incorrect.",
+			Details: err.Error(),
+		}
+
+		ctx.JSON(http.StatusBadRequest, errorResponse)
+		return
+	}
+
+	s.db.UpdateSoulConnection(request.ConnectionCode, request.SecondSoul, ctx)
+
+	ctx.JSON(http.StatusOK, nil)
+}

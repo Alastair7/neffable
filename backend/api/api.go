@@ -32,7 +32,8 @@ func (s *APIServer) Run() error {
 	router.GET("api/test/ping", s.Ping)
 	router.POST("/api/souls", s.CreateSoul)
 	router.GET("/api/souls/:id", s.GetSoulByID)
-	router.POST("api/soulConnections", s.CreateSoulConnection) 
+	router.POST("api/soulConnections", s.CreateSoulConnection)
+	router.PATCH("api/soulConnections/connect", s.ConnectWithSoul)
 
 	return router.Run(s.address)
 }

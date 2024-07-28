@@ -34,3 +34,18 @@ func (pg *Postgres) CreateSoulConnection(soulConnection *SoulConnection, ctx con
 
 	return soulConnection
 }
+
+func (pg *Postgres) UpdateSoulConnection(connectionCode string, secondSoulID uuid.UUID, ctx context.Context) {
+	sql := `
+	UPDATE soul_connections SET second_soul = $1
+	WHERE connection_code = $2
+	`
+
+	_, err := pg.db.Exec(ctx, sql, 
+		secondSoulID,
+		connectionCode)
+
+	if err != nil {
+		panic(err)
+	}
+}
