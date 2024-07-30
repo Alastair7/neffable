@@ -22,15 +22,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
-
-	/*
-	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
-	dbPort := os.Getenv("DB_PORT")
-	dbHost := os.Getenv("DB_HOST")
-	*/
-
+	
 	dbConnectionString := os.Getenv("DB_CONNECTION_STRING")
 
 	 fmt.Print(dbConnectionString)

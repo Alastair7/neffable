@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"neffable/backend/db"
 	"net/http"
 
@@ -51,8 +50,7 @@ func(s *APIServer) CreateSoul(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, errorResponse)
 		return
 	}
-
-	log.Print(&requestSoul)
+	
 	soul := MapToSoulFrom(requestSoul)
 
 	createdSoul := s.db.Save(soul, ctx)
