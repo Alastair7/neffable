@@ -15,4 +15,6 @@ The focus in the phase 1 is to create a login system that allows users to connec
 
 **[23/08/2024]** We have deleted the whole backend to have a fresh start... again.
 
+**[24/08/2024]** We have created a kind of scaffolding in the backend using or trying to use a TDD approach, looks good for now.
+
 #### Final Result:
