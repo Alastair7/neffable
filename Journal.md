@@ -17,4 +17,6 @@ The focus in the phase 1 is to create a login system that allows users to connec
 
 **[24/08/2024]** We have created a kind of scaffolding in the backend using or trying to use a TDD approach, looks good for now.
 
+**[26/08/2024]** We have connected succesfully supabase database and we are figuring out how to test it properly.
+
 #### Final Result:
