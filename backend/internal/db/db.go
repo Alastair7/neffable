@@ -6,22 +6,33 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-type DatabaseClient struct {
-	Address string
+type DatabaseProvider interface {
+	InitDB() error
 }
 
-var db *pgxpool.Pool
+type PostgresClient struct {
+	Address string
+	Db *pgxpool.Pool
+}
 
-func(d *DatabaseClient) InitDB() error {
+func (pgc *PostgresClient) InitDB() error {
 	var err error
+	
+	pgc.Db, err = pgxpool.Connect(context.Background(), pgc.Address)
 
-	db, err = pgxpool.Connect(context.Background(), d.Address)
-
-	defer db.Close()
+	defer pgc.Db.Close()
 	
 	if err != nil {
 		return err
 	}
 
-	return db.Ping(context.Background()) 
+	return pgc.Db.Ping(context.Background()) 
+}
+
+func InitDB(provider DatabaseProvider) error {
+	if err := provider.InitDB(); err != nil {
+		return err
+	}
+
+	return nil
 }

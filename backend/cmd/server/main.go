@@ -12,8 +12,9 @@ import (
 
 func main() {
 	godotenv.Load("../../.env")
-	db := db.DatabaseClient{Address: os.Getenv("DB_CONNECTION_STRING")}
-	err := db.InitDB()
+	dbClient := db.PostgresClient{Address: os.Getenv("DB_CONNECTION_STRING")}
+	
+	err := db.InitDB(&dbClient)
 
 	if err != nil {
 		log.Fatalf("error initiating the DB %s: ", err)
